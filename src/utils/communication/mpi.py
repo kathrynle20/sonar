@@ -42,7 +42,7 @@ class MPICommUtils(CommunicationInterface):
         self.listener_thread = threading.Thread(target=self.listener)
         self.listener_thread.start()
 
-    def initialize(self):
+    def initialize(self): 
         pass
 
     def register_self(self, obj: "BaseNode"):
