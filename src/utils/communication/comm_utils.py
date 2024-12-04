@@ -1,19 +1,46 @@
+from typing import Any, Dict, List, TYPE_CHECKING
 from enum import Enum
 from utils.communication.grpc.main import GRPCCommunication
-from typing import Any, Dict, List, Tuple, TYPE_CHECKING
-# from utils.communication.mpi import MPICommUtils
-# from mpi4py import MPI
+from utils.communication.mpi import MPICommUtils
+import numpy as np
+import subprocess
+import sys
+import platform
+import shutil
 
 if TYPE_CHECKING:
     from algos.base_class import BaseNode
 
-import numpy as np
+def installMPI():
+    system_name = platform.system()
+    if system_name == "Linux":
+        try:
+            subprocess.check_call(["sudo", "apt", "update"])
+            subprocess.check_call(["sudo", "apt", "install", "-y", "libopenmpi-dev", "openmpi-bin"])
+            
+            # Install additional libraries
+            subprocess.check_call(["sudo", "apt-get", "install", "-y", "libgl1", "libglib2.0-0"])
+        except subprocess.CalledProcessError as e:
+            print(f"Error during installation on Linux: {e}")
+    elif system_name == "Darwin":
+        try:
+            # Check if brew is installed
+            if shutil.which("brew") is None:
+                raise EnvironmentError("Homebrew is not installed. Please install Homebrew and try again.")   
+            subprocess.check_call(["brew", "install", "openmpi"])
+        except EnvironmentError as e:
+            print(e)
+        except subprocess.CalledProcessError as e:
+            print(f"Error during installation on macOS: {e}")
+    try:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", mpi4py]) #type: ignore
+    except Exception as e:
+        print(f"Exception when installing mpi4py: {e}")
 
 class CommunicationType(Enum):
     MPI = 1
     GRPC = 2
     HTTP = 3
-
 
 class CommunicationFactory:
     @staticmethod

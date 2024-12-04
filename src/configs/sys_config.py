@@ -182,12 +182,18 @@ mpi_system_config: ConfigType = {
         num_users=3,
         algo_configs=default_config_list
     ),  # type: ignore
-    "samples_per_user": 5555,  # TODO: To model scenarios where different users have different number of samples
+    "samples_per_user": 100,  # TODO: To model scenarios where different users have different number of samples
     # we need to make this a dictionary with user_id as key and number of samples as value
     "train_label_distribution": "iid",  # Either "iid", "non_iid" "support"
     "test_label_distribution": "iid",  # Either "iid", "non_iid" "support"
     "test_samples_per_user": 200,  # Only for non_iid test distribution
     "exp_keys": [],
+    "hostname_to_device_ids": {
+        "matlaber1": [2, 3, 4, 5, 6, 7],
+        "matlaber12": [0, 1, 2, 3],
+        "matlaber3": [0, 1, 2, 3],
+        "matlaber4": [0, 2, 3, 4, 5, 6, 7],
+    }
 }
 
 mpi_non_iid_sys_config: ConfigType = {
@@ -389,6 +395,6 @@ grpc_system_config_gia: ConfigType = {
     "gia_attackers":[1]
 }
 
-current_config = grpc_system_config
-# current_config = mpi_system_config
+# current_config = grpc_system_config
+current_config = mpi_system_config
 
